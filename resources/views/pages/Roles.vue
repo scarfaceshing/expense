@@ -133,6 +133,7 @@ export default {
       this.ShowViewDialog(true)
     },
     Add() {
+      this.valid = true
       this.type = 'ADD'
 
       this.model = {
@@ -157,6 +158,7 @@ export default {
       this.model = item
     },
     Exit() {
+      this.valid = true
       console.log('Close')
       this.ShowDialog(false)
     },

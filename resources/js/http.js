@@ -13,7 +13,7 @@ const http = Axios.create(config)
 
 http.interceptors.request.use(
   function (config) {
-    console.log('Request ', config)
+    // console.log('Request ', config)
 
     if (config.url === '/auth/login') {
       const token = session.getToken()
@@ -32,7 +32,7 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
   function (response) {
-    console.log('Response ', response)
+    // console.log('Response ', response)
 
     return response
   },

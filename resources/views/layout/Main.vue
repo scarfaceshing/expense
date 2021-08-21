@@ -62,13 +62,21 @@
             <v-list-item-title>Expenses Management</v-list-item-title>
           </template>
 
-          <v-list-item link :to="{ name: 'expensecategory' }">
+          <v-list-item
+            v-if="session.role === 'Administrator'"
+            link
+            :to="{ name: 'expensecategory' }"
+          >
             <v-list-item-content>
               <v-list-item-title>Expense Category</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item link :to="{ name: 'expense' }">
+          <v-list-item
+            link
+            v-if="session.role === 'Administrator' || session.role === 'User'"
+            :to="{ name: 'expense' }"
+          >
             <v-list-item-content>
               <v-list-item-title>Expenses</v-list-item-title>
             </v-list-item-content>

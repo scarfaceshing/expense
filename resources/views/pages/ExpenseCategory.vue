@@ -149,6 +149,7 @@ export default {
       this.$refs.dialog.visible = value
     },
     Add() {
+      this.valid = true
       this.type = 'ADD'
 
       this.model = {
@@ -173,6 +174,7 @@ export default {
       this.model = item
     },
     Exit() {
+      this.valid = true
       console.log('Close')
       this.ShowDialog(false)
     },

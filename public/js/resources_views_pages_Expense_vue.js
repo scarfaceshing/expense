@@ -320,6 +320,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowViewDialog(true);
     },
     Add: function Add() {
+      this.valid = true;
       this.type = 'ADD';
       this.model = {
         id: '',
@@ -343,6 +344,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.model = item;
     },
     Exit: function Exit() {
+      this.valid = true;
       console.log('Close');
       this.ShowDialog(false);
     },

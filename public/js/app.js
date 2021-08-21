@@ -1969,6 +1969,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2155,8 +2163,7 @@ var config = {
 };
 var http = axios__WEBPACK_IMPORTED_MODULE_0___default().create(config);
 http.interceptors.request.use(function (config) {
-  console.log('Request ', config);
-
+  // console.log('Request ', config)
   if (config.url === '/auth/login') {
     var token = _session__WEBPACK_IMPORTED_MODULE_1__.default.getToken();
 
@@ -2170,7 +2177,7 @@ http.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 http.interceptors.response.use(function (response) {
-  console.log('Response ', response);
+  // console.log('Response ', response)
   return response;
 }, function (error) {
   return Promise.reject(error);
@@ -2521,7 +2528,11 @@ function serialize(name, val, options) {
 
   if (null != opt.maxAge) {
     var maxAge = opt.maxAge - 0;
-    if (isNaN(maxAge)) throw new Error('maxAge should be a Number');
+
+    if (isNaN(maxAge) || !isFinite(maxAge)) {
+      throw new TypeError('option maxAge is invalid')
+    }
+
     str += '; Max-Age=' + Math.floor(maxAge);
   }
 
@@ -21220,31 +21231,42 @@ var render = function() {
                 },
                 [
                   _vm._v(" "),
-                  _c(
-                    "v-list-item",
-                    { attrs: { link: "", to: { name: "expensecategory" } } },
-                    [
-                      _c(
-                        "v-list-item-content",
-                        [_c("v-list-item-title", [_vm._v("Expense Category")])],
+                  _vm.session.role === "Administrator"
+                    ? _c(
+                        "v-list-item",
+                        {
+                          attrs: { link: "", to: { name: "expensecategory" } }
+                        },
+                        [
+                          _c(
+                            "v-list-item-content",
+                            [
+                              _c("v-list-item-title", [
+                                _vm._v("Expense Category")
+                              ])
+                            ],
+                            1
+                          )
+                        ],
                         1
                       )
-                    ],
-                    1
-                  ),
+                    : _vm._e(),
                   _vm._v(" "),
-                  _c(
-                    "v-list-item",
-                    { attrs: { link: "", to: { name: "expense" } } },
-                    [
-                      _c(
-                        "v-list-item-content",
-                        [_c("v-list-item-title", [_vm._v("Expenses")])],
+                  _vm.session.role === "Administrator" ||
+                  _vm.session.role === "User"
+                    ? _c(
+                        "v-list-item",
+                        { attrs: { link: "", to: { name: "expense" } } },
+                        [
+                          _c(
+                            "v-list-item-content",
+                            [_c("v-list-item-title", [_vm._v("Expenses")])],
+                            1
+                          )
+                        ],
                         1
                       )
-                    ],
-                    1
-                  )
+                    : _vm._e()
                 ],
                 1
               )
@@ -82177,7 +82199,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_vue__;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_views_public_Index_vue":1,"resources_views_pages_Dashboard_vue":1,"resources_views_pages_Roles_vue":1,"resources_views_pages_UserChangePassword_vue":1,"resources_views_pages_Users_vue":1,"resources_views_pages_ExpenseCategory_vue":1,"resources_views_pages_Expense_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_views_public_Index_vue":1,"resources_views_pages_Dashboard_vue":1,"resources_views_pages_Roles_vue":1,"resources_views_pages_UserChangePassword_vue":1,"resources_views_pages_Users_vue":1,"resources_views_pages_ExpenseCategory_vue":1,"resources_views_pages_Expense_vue":1,"resources_views_component_Chart_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};
