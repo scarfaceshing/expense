@@ -23,7 +23,7 @@ class ExpensesController extends Controller
 
         if (
             auth()->user()->role === 'Administrator' ||
-            auth()->user()->role === 'user'
+            auth()->user()->role === 'User'
         ) {
             return response()->json(Expenses::all());
         } else {

@@ -48,7 +48,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['viewOnly'],
   data: function data() {
     return {
       visible: false
@@ -73,6 +79,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _js_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../js/http */ "./resources/js/http.js");
 /* harmony import */ var _component_Dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../component/Dialog */ "./resources/views/component/Dialog.vue");
+/* harmony import */ var _js_validator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../js/validator */ "./resources/js/validator.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -129,6 +136,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -137,6 +194,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      valid: true,
+      validator: _js_validator__WEBPACK_IMPORTED_MODULE_3__.default,
       type: '',
       model: {
         id: '',
@@ -219,11 +278,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
+    ShowViewDialog: function ShowViewDialog(value) {
+      this.$refs.viewDialog.visible = value;
+    },
     ShowDeleteDialog: function ShowDeleteDialog(value) {
       this.$refs.deleteDialog.visible = value;
     },
     ShowDialog: function ShowDialog(value) {
       this.$refs.dialog.visible = value;
+    },
+    Show: function Show($event) {
+      this.type = 'VIEW';
+      this.model = $event;
+      this.ShowViewDialog(true);
     },
     Add: function Add() {
       this.type = 'ADD';
@@ -236,11 +303,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowDialog(true);
     },
     OnDelete: function OnDelete(item) {
+      this.type = 'DELETE';
       this.model = item;
       this.ShowDeleteDialog(true);
     },
     Delete: function Delete() {
-      this.type = 'DELETE';
       this.Save();
     },
     Edit: function Edit(item) {
@@ -256,6 +323,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this3 = this;
 
       console.log('Save');
+
+      if (!this.$refs.form.validate()) {
+        return;
+      }
 
       if (this.type === 'ADD') {
         _js_http__WEBPACK_IMPORTED_MODULE_1__.default.post('/data/user', {
@@ -306,6 +377,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.LoadData();
     this.LoadRole();
   }
+});
+
+/***/ }),
+
+/***/ "./resources/js/validator.js":
+/*!***********************************!*\
+  !*** ./resources/js/validator.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  required: [function (v) {
+    return !!v || 'Field is required';
+  }],
+  email: [function (v) {
+    return !!v || 'Field is required';
+  }, function (v) {
+    return /.+@.+/.test(v) || 'E-mail must be valid';
+  }],
+  number: [function (v) {
+    return !!v || 'Field is required';
+  }, function (v) {
+    return !v || /^[0-9]*$/.test(v) || 'Enter numbers only.';
+  }]
 });
 
 /***/ }),
@@ -1254,9 +1354,7 @@ var render = function() {
           _c(
             "v-card",
             [
-              _c("v-card-title", [
-                _c("span", { staticClass: "text-h5" }, [_vm._v("User Profile")])
-              ]),
+              _c("v-card-title", [_vm._t("title")], 2),
               _vm._v(" "),
               _c("v-card-text", [_c("v-container", [_vm._t("default")], 2)], 1),
               _vm._v(" "),
@@ -1264,6 +1362,27 @@ var render = function() {
                 "v-card-actions",
                 [
                   _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.viewOnly === false,
+                          expression: "viewOnly === false"
+                        }
+                      ],
+                      attrs: { color: "blue darken-1", text: "" },
+                      on: {
+                        click: function($event) {
+                          return _vm.$emit("Save")
+                        }
+                      }
+                    },
+                    [_vm._v("\n          Save\n        ")]
+                  ),
                   _vm._v(" "),
                   _c(
                     "v-btn",
@@ -1276,19 +1395,6 @@ var render = function() {
                       }
                     },
                     [_vm._v("\n          Close\n        ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { color: "blue darken-1", text: "" },
-                      on: {
-                        click: function($event) {
-                          return _vm.$emit("Save")
-                        }
-                      }
-                    },
-                    [_vm._v("\n          Save\n        ")]
                   )
                 ],
                 1
@@ -1331,6 +1437,7 @@ var render = function() {
     [
       _c("Dialog", {
         ref: "deleteDialog",
+        attrs: { viewOnly: false },
         on: {
           Exit: function($event) {
             return _vm.ShowDeleteDialog(false)
@@ -1338,6 +1445,13 @@ var render = function() {
           Save: _vm.Delete
         },
         scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n      " + _vm._s(_vm.type) + "\n    ")]
+            },
+            proxy: true
+          },
           {
             key: "default",
             fn: function() {
@@ -1350,48 +1464,124 @@ var render = function() {
       _vm._v(" "),
       _c("Dialog", {
         ref: "dialog",
+        attrs: { viewOnly: false },
         on: { Exit: _vm.Exit, Save: _vm.Save },
         scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n      " + _vm._s(_vm.type) + "\n    ")]
+            },
+            proxy: true
+          },
           {
             key: "default",
             fn: function() {
               return [
-                _c("v-text-field", {
-                  attrs: { label: "Username" },
-                  model: {
-                    value: _vm.model.name,
-                    callback: function($$v) {
-                      _vm.$set(_vm.model, "name", $$v)
-                    },
-                    expression: "model.name"
-                  }
-                }),
-                _vm._v(" "),
-                _c("v-text-field", {
-                  attrs: { label: "Email" },
-                  model: {
-                    value: _vm.model.email,
-                    callback: function($$v) {
-                      _vm.$set(_vm.model, "email", $$v)
-                    },
-                    expression: "model.email"
-                  }
-                }),
-                _vm._v(" "),
-                _c("v-select", {
-                  attrs: {
-                    items: _vm.form.roles,
-                    "item-text": "name",
-                    "item-value": "name"
+                _c(
+                  "v-form",
+                  {
+                    ref: "form",
+                    attrs: { "lazy-validation": "" },
+                    model: {
+                      value: _vm.valid,
+                      callback: function($$v) {
+                        _vm.valid = $$v
+                      },
+                      expression: "valid"
+                    }
                   },
-                  model: {
-                    value: _vm.model.role,
-                    callback: function($$v) {
-                      _vm.$set(_vm.model, "role", $$v)
-                    },
-                    expression: "model.role"
-                  }
-                })
+                  [
+                    _c("v-text-field", {
+                      attrs: {
+                        rules: _vm.validator.required,
+                        label: "Username"
+                      },
+                      model: {
+                        value: _vm.model.name,
+                        callback: function($$v) {
+                          _vm.$set(_vm.model, "name", $$v)
+                        },
+                        expression: "model.name"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("v-text-field", {
+                      attrs: { rules: _vm.validator.email, label: "Email" },
+                      model: {
+                        value: _vm.model.email,
+                        callback: function($$v) {
+                          _vm.$set(_vm.model, "email", $$v)
+                        },
+                        expression: "model.email"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("v-select", {
+                      attrs: {
+                        rules: _vm.validator.required,
+                        items: _vm.form.roles,
+                        "item-text": "name",
+                        "item-value": "name"
+                      },
+                      model: {
+                        value: _vm.model.role,
+                        callback: function($$v) {
+                          _vm.$set(_vm.model, "role", $$v)
+                        },
+                        expression: "model.role"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      }),
+      _vm._v(" "),
+      _c("Dialog", {
+        ref: "viewDialog",
+        attrs: { viewOnly: true },
+        on: {
+          Exit: function($event) {
+            return _vm.ShowViewDialog(false)
+          },
+          Save: _vm.Save
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n      " + _vm._s(_vm.type) + "\n    ")]
+            },
+            proxy: true
+          },
+          {
+            key: "default",
+            fn: function() {
+              return [
+                _c("v-simple-table", [
+                  _c("tbody", [
+                    _c("tr", [
+                      _c("td", [_c("strong", [_vm._v("Name")])]),
+                      _vm._v(" "),
+                      _c("td", [_c("strong", [_vm._v("Email")])]),
+                      _vm._v(" "),
+                      _c("td", [_c("strong", [_vm._v("Role")])])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", [_vm._v(_vm._s(_vm.model.name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.model.email))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.model.role))])
+                    ])
+                  ])
+                ])
               ]
             },
             proxy: true
@@ -1430,6 +1620,11 @@ var render = function() {
                   items: _vm.items,
                   "items-per-page": 5
                 },
+                on: {
+                  "click:row": function($event) {
+                    return _vm.Show($event)
+                  }
+                },
                 scopedSlots: _vm._u(
                   [
                     {
@@ -1444,6 +1639,7 @@ var render = function() {
                             },
                             on: {
                               click: function($event) {
+                                $event.stopPropagation()
                                 return _vm.Edit(item)
                               }
                             }
@@ -1456,6 +1652,7 @@ var render = function() {
                             },
                             on: {
                               click: function($event) {
+                                $event.stopPropagation()
                                 return _vm.OnDelete(item)
                               }
                             }

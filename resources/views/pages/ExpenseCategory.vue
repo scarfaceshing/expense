@@ -1,14 +1,60 @@
 <template>
   <div>
-    <Dialog ref="deleteDialog" @Exit="ShowDeleteDialog(false)" @Save="Delete">
+    <Dialog
+      ref="deleteDialog"
+      :viewOnly="false"
+      @Exit="ShowDeleteDialog(false)"
+      @Save="Delete"
+    >
+      <template v-slot:title>
+        {{ type }}
+      </template>
       <template v-slot:default>
         <h1>Are you sure?</h1>
       </template>
     </Dialog>
-    <Dialog ref="dialog" @Exit="Exit" @Save="Save">
+    <Dialog ref="dialog" :viewOnly="false" @Exit="Exit" @Save="Save">
+      <template v-slot:title>
+        {{ type }}
+      </template>
       <template v-slot:default>
-        <v-text-field label="Name" v-model="model.name" />
-        <v-text-field label="Description" v-model="model.description" />
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-text-field
+            :rules="validator.required"
+            label="Name"
+            v-model="model.name"
+          />
+          <v-text-field
+            :rules="validator.required"
+            label="Description"
+            v-model="model.description"
+          />
+        </v-form>
+      </template>
+    </Dialog>
+    <Dialog
+      ref="viewDialog"
+      :type="false"
+      :viewOnly="true"
+      @Exit="ShowViewDialog(false)"
+      @Save="Save"
+    >
+      <template v-slot:title>
+        {{ type }}
+      </template>
+      <template v-slot:default>
+        <v-simple-table>
+          <tbody>
+            <tr>
+              <td><strong>Name</strong></td>
+              <td><strong>Description</strong></td>
+            </tr>
+            <tr>
+              <td>{{ model.name }}</td>
+              <td>{{ model.description }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </template>
     </Dialog>
     <v-row>
@@ -23,17 +69,18 @@
           :items="items"
           :items-per-page="5"
           class="elevation-1"
+          @click:row="Show($event)"
         >
           <template #[`item.action`]="{ item }">
             <v-icon
               color="primary"
               v-text="`mdi-lead-pencil`"
-              @click="Edit(item)"
+              @click.stop="Edit(item)"
             />
             <v-icon
               color="red"
               v-text="`mdi-delete-empty`"
-              @click="OnDelete(item)"
+              @click.stop="OnDelete(item)"
             />
           </template>
         </v-data-table>
@@ -45,6 +92,7 @@
 <script>
 import http from '../../js/http'
 import Dialog from '../component/Dialog'
+import Validator from '../../js/validator'
 
 export default {
   components: {
@@ -52,7 +100,9 @@ export default {
   },
   data() {
     return {
+      valid: true,
       type: '',
+      validator: Validator,
       model: {
         id: '',
         name: '',
@@ -84,6 +134,14 @@ export default {
       const { data } = await http.get('/data/expense-categories')
       this.items = data
     },
+    Show($event) {
+      this.type = 'VIEW'
+      this.model = $event
+      this.ShowViewDialog(true)
+    },
+    ShowViewDialog(value) {
+      this.$refs.viewDialog.visible = value
+    },
     ShowDeleteDialog(value) {
       this.$refs.deleteDialog.visible = value
     },
@@ -102,11 +160,11 @@ export default {
       this.ShowDialog(true)
     },
     OnDelete(item) {
+      this.type = 'DELETE'
       this.model = item
       this.ShowDeleteDialog(true)
     },
     Delete() {
-      this.type = 'DELETE'
       this.Save()
     },
     Edit(item) {
@@ -120,6 +178,10 @@ export default {
     },
     Save() {
       console.log('Save')
+      if (!this.$refs.form.validate()) {
+        return
+      }
+
       if (this.type === 'ADD') {
         http
           .post('/data/expense-categories', {

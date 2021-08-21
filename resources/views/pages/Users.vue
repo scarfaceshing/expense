@@ -1,20 +1,68 @@
 <template>
   <div>
-    <Dialog ref="deleteDialog" @Exit="ShowDeleteDialog(false)" @Save="Delete">
+    <Dialog
+      ref="deleteDialog"
+      :viewOnly="false"
+      @Exit="ShowDeleteDialog(false)"
+      @Save="Delete"
+    >
+      <template v-slot:title>
+        {{ type }}
+      </template>
       <template v-slot:default>
         <h1>Are you sure?</h1>
       </template>
     </Dialog>
-    <Dialog ref="dialog" @Exit="Exit" @Save="Save">
+    <Dialog ref="dialog" :viewOnly="false" @Exit="Exit" @Save="Save">
+      <template v-slot:title>
+        {{ type }}
+      </template>
       <template v-slot:default>
-        <v-text-field label="Username" v-model="model.name" />
-        <v-text-field label="Email" v-model="model.email" />
-        <v-select
-          v-model="model.role"
-          :items="form.roles"
-          item-text="name"
-          item-value="name"
-        />
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-text-field
+            :rules="validator.required"
+            label="Username"
+            v-model="model.name"
+          />
+          <v-text-field
+            :rules="validator.email"
+            label="Email"
+            v-model="model.email"
+          />
+          <v-select
+            :rules="validator.required"
+            v-model="model.role"
+            :items="form.roles"
+            item-text="name"
+            item-value="name"
+          />
+        </v-form>
+      </template>
+    </Dialog>
+    <Dialog
+      ref="viewDialog"
+      :viewOnly="true"
+      @Exit="ShowViewDialog(false)"
+      @Save="Save"
+    >
+      <template v-slot:title>
+        {{ type }}
+      </template>
+      <template v-slot:default>
+        <v-simple-table>
+          <tbody>
+            <tr>
+              <td><strong>Name</strong></td>
+              <td><strong>Email</strong></td>
+              <td><strong>Role</strong></td>
+            </tr>
+            <tr>
+              <td>{{ model.name }}</td>
+              <td>{{ model.email }}</td>
+              <td>{{ model.role }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </template>
     </Dialog>
     <v-row>
@@ -29,17 +77,18 @@
           :items="items"
           :items-per-page="5"
           class="elevation-1"
+          @click:row="Show($event)"
         >
           <template #[`item.action`]="{ item }">
             <v-icon
               color="primary"
               v-text="`mdi-lead-pencil`"
-              @click="Edit(item)"
+              @click.stop="Edit(item)"
             />
             <v-icon
               color="red"
               v-text="`mdi-delete-empty`"
-              @click="OnDelete(item)"
+              @click.stop="OnDelete(item)"
             />
           </template>
         </v-data-table>
@@ -51,6 +100,7 @@
 <script>
 import http from '../../js/http'
 import Dialog from '../component/Dialog'
+import Validator from '../../js/validator'
 
 export default {
   components: {
@@ -58,6 +108,8 @@ export default {
   },
   data() {
     return {
+      valid: true,
+      validator: Validator,
       type: '',
       model: {
         id: '',
@@ -102,11 +154,19 @@ export default {
       const { data } = await http.get('/data/user')
       this.items = data
     },
+    ShowViewDialog(value) {
+      this.$refs.viewDialog.visible = value
+    },
     ShowDeleteDialog(value) {
       this.$refs.deleteDialog.visible = value
     },
     ShowDialog(value) {
       this.$refs.dialog.visible = value
+    },
+    Show($event) {
+      this.type = 'VIEW'
+      this.model = $event
+      this.ShowViewDialog(true)
     },
     Add() {
       this.type = 'ADD'
@@ -121,11 +181,11 @@ export default {
       this.ShowDialog(true)
     },
     OnDelete(item) {
+      this.type = 'DELETE'
       this.model = item
       this.ShowDeleteDialog(true)
     },
     Delete() {
-      this.type = 'DELETE'
       this.Save()
     },
     Edit(item) {
@@ -139,6 +199,10 @@ export default {
     },
     Save() {
       console.log('Save')
+      if (!this.$refs.form.validate()) {
+        return
+      }
+
       if (this.type === 'ADD') {
         http
           .post('/data/user', {

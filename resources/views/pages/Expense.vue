@@ -1,52 +1,97 @@
 <template>
   <div>
-    <Dialog ref="deleteDialog" @Exit="ShowDeleteDialog(false)" @Save="Delete">
+    <Dialog
+      ref="deleteDialog"
+      :viewOnly="false"
+      @Exit="ShowDeleteDialog(false)"
+      @Save="Delete"
+    >
+      <template v-slot:title>
+        {{ type }}
+      </template>
       <template v-slot:default>
         <h1>Are you sure?</h1>
       </template>
     </Dialog>
-    <Dialog ref="dialog" @Exit="Exit" @Save="Save">
+    <Dialog ref="dialog" :viewOnly="false" @Exit="Exit" @Save="Save">
+      <template v-slot:title>
+        {{ type }}
+      </template>
       <template v-slot:default>
-        <v-select
-          v-model="model.expenses_category"
-          :items="form.expense"
-          item-text="name"
-          item-value="name"
-        />
-        <v-text-field label="Amount" v-model="model.amount" />
-        <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          :return-value.sync="model.date_entry"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="model.date_entry"
-              label="Picker in menu"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="model.date_entry" no-title scrollable>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="menu = false">
-              Cancel
-            </v-btn>
-            <v-btn
-              text
-              color="primary"
-              @click="$refs.menu.save(model.date_entry)"
-            >
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-menu>
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-select
+            v-model="model.expenses_category"
+            :items="form.expense"
+            item-text="name"
+            item-value="name"
+            :rules="validator.required"
+          />
+          <v-text-field
+            :rules="validator.number"
+            label="Amount"
+            v-model="model.amount"
+          />
+          <v-menu
+            ref="menu"
+            v-model="menu"
+            :close-on-content-click="false"
+            :return-value.sync="model.date_entry"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="model.date_entry"
+                :rules="validator.required"
+                label="Picker in menu"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="model.date_entry" no-title scrollable>
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="menu = false">
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="primary"
+                @click="$refs.menu.save(model.date_entry)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-menu>
+        </v-form>
+      </template>
+    </Dialog>
+    <Dialog
+      ref="viewDialog"
+      :viewOnly="true"
+      @Exit="ShowViewDialog(false)"
+      @Save="Save"
+    >
+      <template v-slot:title>
+        {{ type }}
+      </template>
+      <template v-slot:default>
+        <v-simple-table>
+          <tbody>
+            <tr>
+              <td><strong>Name</strong></td>
+              <td><strong>Email</strong></td>
+              <td><strong>Role</strong></td>
+            </tr>
+            <tr>
+              <td>{{ model.expenses_category }}</td>
+              <td>{{ model.amount }}</td>
+              <td>{{ model.date_entry }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </template>
     </Dialog>
     <v-row>
@@ -61,17 +106,18 @@
           :items="items"
           :items-per-page="5"
           class="elevation-1"
+          @click:row="Show($event)"
         >
           <template #[`item.action`]="{ item }">
             <v-icon
               color="primary"
               v-text="`mdi-lead-pencil`"
-              @click="Edit(item)"
+              @click.stop="Edit(item)"
             />
             <v-icon
               color="red"
               v-text="`mdi-delete-empty`"
-              @click="OnDelete(item)"
+              @click.stop="OnDelete(item)"
             />
           </template>
         </v-data-table>
@@ -83,6 +129,7 @@
 <script>
 import http from '../../js/http'
 import Dialog from '../component/Dialog'
+import Validator from '../../js/validator'
 
 export default {
   components: {
@@ -91,6 +138,8 @@ export default {
   data() {
     return {
       type: '',
+      valid: true,
+      validator: Validator,
       menu: false,
       model: {
         id: '',
@@ -131,11 +180,19 @@ export default {
       const { data } = await http.get('/data/expenses')
       this.items = data
     },
+    ShowViewDialog(value) {
+      this.$refs.viewDialog.visible = value
+    },
     ShowDeleteDialog(value) {
       this.$refs.deleteDialog.visible = value
     },
     ShowDialog(value) {
       this.$refs.dialog.visible = value
+    },
+    Show($event) {
+      this.type = 'VIEW'
+      this.model = $event
+      this.ShowViewDialog(true)
     },
     Add() {
       this.type = 'ADD'
@@ -150,11 +207,11 @@ export default {
       this.ShowDialog(true)
     },
     OnDelete(item) {
+      this.type = 'DELETE'
       this.model = item
       this.ShowDeleteDialog(true)
     },
     Delete() {
-      this.type = 'DELETE'
       this.Save()
     },
     Edit(item) {
@@ -168,6 +225,10 @@ export default {
     },
     Save() {
       console.log('Save')
+      if (!this.$refs.form.validate()) {
+        return
+      }
+
       if (this.type === 'ADD') {
         http
           .post('/data/expenses', {

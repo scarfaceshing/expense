@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\ChangePasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,5 +46,13 @@ Route::group(
             ExpenseCategoriesController::class
         );
         Route::resource('expenses', ExpensesController::class);
+        Route::patch('changepassword/{id}', [
+            ChangePasswordController::class,
+            'changepass',
+        ]);
+        Route::post('validatepass/{id}', [
+            ChangePasswordController::class,
+            'validatepass',
+        ]);
     }
 );

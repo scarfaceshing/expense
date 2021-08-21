@@ -1951,6 +1951,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2223,6 +2241,21 @@ var routes = [{
       }, {
         text: 'Roles',
         name: 'roles'
+      }]
+    }
+  }, {
+    path: 'userchangepassword',
+    name: 'userchangepassword',
+    component: function component() {
+      return __webpack_require__.e(/*! import() */ "resources_views_pages_UserChangePassword_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../views/pages/UserChangePassword.vue */ "./resources/views/pages/UserChangePassword.vue"));
+    },
+    meta: {
+      text: 'User',
+      breadcrumb: [{
+        text: 'User management'
+      }, {
+        text: 'User change password',
+        name: 'userchangepassword'
       }]
     }
   }, {
@@ -21106,31 +21139,59 @@ var render = function() {
                 },
                 [
                   _vm._v(" "),
-                  _c(
-                    "v-list-item",
-                    { attrs: { link: "", to: { name: "user" } } },
-                    [
-                      _c(
-                        "v-list-item-content",
-                        [_c("v-list-item-title", [_vm._v("Users")])],
+                  _vm.session.role === "User"
+                    ? _c(
+                        "v-list-item",
+                        {
+                          attrs: {
+                            link: "",
+                            to: { name: "userchangepassword" }
+                          }
+                        },
+                        [
+                          _c(
+                            "v-list-item-content",
+                            [
+                              _c("v-list-item-title", [
+                                _vm._v("Change Password")
+                              ])
+                            ],
+                            1
+                          )
+                        ],
                         1
                       )
-                    ],
-                    1
-                  ),
+                    : _vm._e(),
                   _vm._v(" "),
-                  _c(
-                    "v-list-item",
-                    { attrs: { link: "", to: { name: "roles" } } },
-                    [
-                      _c(
-                        "v-list-item-content",
-                        [_c("v-list-item-title", [_vm._v("Roles")])],
+                  _vm.session.role === "Administrator"
+                    ? _c(
+                        "v-list-item",
+                        { attrs: { link: "", to: { name: "user" } } },
+                        [
+                          _c(
+                            "v-list-item-content",
+                            [_c("v-list-item-title", [_vm._v("Users")])],
+                            1
+                          )
+                        ],
                         1
                       )
-                    ],
-                    1
-                  )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.session.role === "Administrator"
+                    ? _c(
+                        "v-list-item",
+                        { attrs: { link: "", to: { name: "roles" } } },
+                        [
+                          _c(
+                            "v-list-item-content",
+                            [_c("v-list-item-title", [_vm._v("Roles")])],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e()
                 ],
                 1
               ),
@@ -82116,7 +82177,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_vue__;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_views_public_Index_vue":1,"resources_views_pages_Dashboard_vue":1,"resources_views_pages_Roles_vue":1,"resources_views_pages_Users_vue":1,"resources_views_pages_ExpenseCategory_vue":1,"resources_views_pages_Expense_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_views_public_Index_vue":1,"resources_views_pages_Dashboard_vue":1,"resources_views_pages_Roles_vue":1,"resources_views_pages_UserChangePassword_vue":1,"resources_views_pages_Users_vue":1,"resources_views_pages_ExpenseCategory_vue":1,"resources_views_pages_Expense_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

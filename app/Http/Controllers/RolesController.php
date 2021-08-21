@@ -47,6 +47,18 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         //
+        if (auth()->user()->role === 'Administrator') {
+            $roles = new Roles();
+            $roles->name = $request->name;
+            $roles->description = $request->description;
+            $roles->save();
+
+            if ($roles) {
+                return response()->json(['Status' => 'Success']);
+            }
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 
     /**

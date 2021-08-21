@@ -26,13 +26,31 @@
             <v-list-item-title>Users Management</v-list-item-title>
           </template>
 
-          <v-list-item link :to="{ name: 'user' }">
+          <v-list-item
+            v-if="session.role === 'User'"
+            link
+            :to="{ name: 'userchangepassword' }"
+          >
+            <v-list-item-content>
+              <v-list-item-title>Change Password</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item
+            v-if="session.role === 'Administrator'"
+            link
+            :to="{ name: 'user' }"
+          >
             <v-list-item-content>
               <v-list-item-title>Users</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item link :to="{ name: 'roles' }">
+          <v-list-item
+            v-if="session.role === 'Administrator'"
+            link
+            :to="{ name: 'roles' }"
+          >
             <v-list-item-content>
               <v-list-item-title>Roles</v-list-item-title>
             </v-list-item-content>

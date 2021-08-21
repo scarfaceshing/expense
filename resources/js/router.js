@@ -44,6 +44,18 @@ const routes = [
         },
       },
       {
+        path: 'userchangepassword',
+        name: 'userchangepassword',
+        component: () => import('../views/pages/UserChangePassword.vue'),
+        meta: {
+          text: 'User',
+          breadcrumb: [
+            { text: 'User management' },
+            { text: 'User change password', name: 'userchangepassword' },
+          ],
+        },
+      },
+      {
         path: 'user',
         name: 'user',
         component: () => import('../views/pages/Users.vue'),

@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->id();
             $table->string('expenses_category', 45);
             $table->double('amount');
-            $table->dateTime('date_entry');
+            $table->date('date_entry');
             $table->timestamps();
         });
     }

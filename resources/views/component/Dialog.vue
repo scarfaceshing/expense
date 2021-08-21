@@ -3,7 +3,7 @@
     <v-dialog v-model="visible" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="text-h5">User Profile</span>
+          <slot name="title"></slot>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -12,11 +12,16 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn
+            v-show="viewOnly === false"
+            color="blue darken-1"
+            text
+            @click="$emit('Save')"
+          >
+            Save
+          </v-btn>
           <v-btn color="blue darken-1" text @click="$emit('Exit')">
             Close
-          </v-btn>
-          <v-btn color="blue darken-1" text @click="$emit('Save')">
-            Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -26,6 +31,7 @@
 
 <script>
 export default {
+  props: ['viewOnly'],
   data() {
     return {
       visible: false,
