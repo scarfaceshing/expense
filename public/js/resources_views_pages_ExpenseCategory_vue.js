@@ -220,13 +220,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (this.type === 'ADD') {
         _js_http__WEBPACK_IMPORTED_MODULE_1__.default.post('/data/expense-categories', {
           name: this.model.name,
-          email: this.model.email,
-          role: this.model.role
+          description: this.model.description
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {
             console.log(res);
           }
         })["catch"](function (res) {})["finally"](function () {
+          _this2.LoadData();
+
           _this2.ShowDialog(false);
         });
       }
@@ -234,13 +235,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (this.type === 'UPDATE') {
         _js_http__WEBPACK_IMPORTED_MODULE_1__.default.patch("/data/expense-categories/".concat(this.model.id), {
           name: this.model.name,
-          email: this.model.email,
-          role: this.model.role
+          description: this.model.description
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {
             console.log(res);
           }
         })["catch"](function (err) {})["finally"](function () {
+          _this2.LoadData();
+
           _this2.ShowDialog(false);
         });
       }
@@ -253,6 +255,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             console.log(res);
           }
         })["catch"](function (err) {})["finally"](function () {
+          _this2.LoadData();
+
           _this2.ShowDeleteDialog(false);
         });
       }
@@ -1325,11 +1329,11 @@ var render = function() {
                 _c("v-text-field", {
                   attrs: { label: "Description" },
                   model: {
-                    value: _vm.model.email,
+                    value: _vm.model.description,
                     callback: function($$v) {
-                      _vm.$set(_vm.model, "email", $$v)
+                      _vm.$set(_vm.model, "description", $$v)
                     },
-                    expression: "model.email"
+                    expression: "model.description"
                   }
                 })
               ]

@@ -153,6 +153,7 @@ export default {
           })
           .catch((res) => {})
           .finally(() => {
+            this.LoadData()
             this.ShowDialog(false)
           })
       }
@@ -171,6 +172,7 @@ export default {
           })
           .catch((err) => {})
           .finally(() => {
+            this.LoadData()
             this.ShowDialog(false)
           })
       }
@@ -180,12 +182,12 @@ export default {
           .delete(`/data/user/${this.model.id}`, {})
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
-              this.LoadData()
               console.log(res)
             }
           })
           .catch((err) => {})
           .finally(() => {
+            this.LoadData()
             this.ShowDeleteDialog(false)
           })
       }

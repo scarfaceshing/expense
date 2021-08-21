@@ -267,6 +267,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             console.log(res);
           }
         })["catch"](function (res) {})["finally"](function () {
+          _this3.LoadData();
+
           _this3.ShowDialog(false);
         });
       }
@@ -281,6 +283,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             console.log(res);
           }
         })["catch"](function (err) {})["finally"](function () {
+          _this3.LoadData();
+
           _this3.ShowDialog(false);
         });
       }
@@ -288,11 +292,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (this.type === 'DELETE') {
         _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/user/".concat(this.model.id), {}).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {
-            _this3.LoadData();
-
             console.log(res);
           }
         })["catch"](function (err) {})["finally"](function () {
+          _this3.LoadData();
+
           _this3.ShowDeleteDialog(false);
         });
       }

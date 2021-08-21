@@ -60,10 +60,12 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if (User::findOrFail($user->id)->delete()) {
-            return response()->json(['Status' => 'Success']);
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (auth()->user()->role === 'Administrator') {
+            if (User::findOrFail($user->id)->delete()) {
+                return response()->json(['Status' => 'Success']);
+            } else {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
         }
     }
 }

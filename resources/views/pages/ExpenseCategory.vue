@@ -8,7 +8,7 @@
     <Dialog ref="dialog" @Exit="Exit" @Save="Save">
       <template v-slot:default>
         <v-text-field label="Name" v-model="model.name" />
-        <v-text-field label="Description" v-model="model.email" />
+        <v-text-field label="Description" v-model="model.description" />
       </template>
     </Dialog>
     <v-row>
@@ -124,8 +124,7 @@ export default {
         http
           .post('/data/expense-categories', {
             name: this.model.name,
-            email: this.model.email,
-            role: this.model.role,
+            description: this.model.description,
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
@@ -134,6 +133,7 @@ export default {
           })
           .catch((res) => {})
           .finally(() => {
+            this.LoadData()
             this.ShowDialog(false)
           })
       }
@@ -142,8 +142,7 @@ export default {
         http
           .patch(`/data/expense-categories/${this.model.id}`, {
             name: this.model.name,
-            email: this.model.email,
-            role: this.model.role,
+            description: this.model.description,
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
@@ -152,6 +151,7 @@ export default {
           })
           .catch((err) => {})
           .finally(() => {
+            this.LoadData()
             this.ShowDialog(false)
           })
       }
@@ -167,6 +167,7 @@ export default {
           })
           .catch((err) => {})
           .finally(() => {
+            this.LoadData()
             this.ShowDeleteDialog(false)
           })
       }

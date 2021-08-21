@@ -20,7 +20,10 @@ class ExpenseCategoriesController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->role === 'Administrator') {
+        if (
+            auth()->user()->role === 'Administrator' ||
+            auth()->user()->role === 'User'
+        ) {
             return response()->json(ExpenseCategories::all());
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -49,9 +52,7 @@ class ExpenseCategoriesController extends Controller
         if (auth()->user()->role === 'Administrator') {
             $expenseCat = new ExpenseCategories();
             $expenseCat->name = $request->name;
-            $expenseCat->email = $request->email;
-            $expenseCat->password = bcrypt('1234');
-            $expenseCat->role = $request->role;
+            $expenseCat->description = $request->description;
             $expenseCat->save();
 
             if ($expenseCat) {
@@ -91,18 +92,14 @@ class ExpenseCategoriesController extends Controller
      * @param  \App\Models\ExpenseCategories  $expenseCategories
      * @return \Illuminate\Http\Response
      */
-    public function update(
-        Request $request,
-        ExpenseCategories $expenseCategories
-    ) {
+    public function update(Request $request, $id)
+    {
         //
 
         if (auth()->user()->role === 'Administrator') {
-            $expenseCat = ExpenseCategories::findOrFail($expenseCategories->id);
+            $expenseCat = ExpenseCategories::findOrFail($id);
             $expenseCat->name = $request->name;
-            $expenseCat->email = $request->email;
-            $expenseCat->password = bcrypt('1234');
-            $expenseCat->role = $request->role;
+            $expenseCat->description = $request->description;
             $expenseCat->save();
 
             if ($expenseCat) {
@@ -119,13 +116,15 @@ class ExpenseCategoriesController extends Controller
      * @param  \App\Models\ExpenseCategories  $expenseCategories
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ExpenseCategories $expenseCategories)
+    public function destroy($id)
     {
         //
-        if (ExpenseCategories::findOrFail($expenseCategories->id)->delete()) {
-            return response()->json(['Status' => 'Success']);
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (auth()->user()->role === 'Administrator') {
+            if (ExpenseCategories::findOrFail($id)->delete()) {
+                return response()->json(['Status' => 'Success']);
+            } else {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
         }
     }
 }
