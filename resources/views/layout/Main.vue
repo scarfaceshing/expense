@@ -4,7 +4,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            Expenses
+            {{ session.name }} ({{ session.role }})
           </v-list-item-title>
           <v-list-item-subtitle></v-list-item-subtitle>
         </v-list-item-content>
@@ -84,13 +84,14 @@
 </template>
 
 <script>
-import http from '../../js/http'
+import auth from '../../js/auth'
 import session from '../../js/session'
 
 export default {
   data() {
     return {
       breadcrumbList: [],
+      session: {},
     }
   },
   watch: {
@@ -100,11 +101,18 @@ export default {
   },
   mounted() {
     this.breadcrumbList = this.$route.meta.breadcrumb
+
+    session.getSession().then((res) => {
+      this.session = {
+        name: res.data.name,
+        role: res.data.role,
+      }
+    })
   },
   methods: {
     logout() {
-      http
-        .post('/auth/logout', {})
+      auth
+        .logout()
         .then((res) => {})
         .catch((err) => {})
         .finally(() => {

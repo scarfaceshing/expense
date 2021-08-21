@@ -1,3 +1,4 @@
+import http from '../js/http'
 import Cookie from 'universal-cookie'
 const cookie = new Cookie()
 
@@ -18,5 +19,9 @@ export default {
 
   getAuth() {
     return cookie.get('auth', { path: '/' })
+  },
+
+  getSession() {
+    return http.post('/auth/me', {})
   },
 }

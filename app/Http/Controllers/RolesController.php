@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class RolesController extends Controller
 {
+    //
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +21,11 @@ class RolesController extends Controller
     public function index()
     {
         //
+        if (auth()->user()->role === 'Administrator') {
+            return response()->json(Roles::all());
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 
     /**

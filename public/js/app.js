@@ -1864,7 +1864,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _js_http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../js/http */ "./resources/js/http.js");
+/* harmony import */ var _js_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../js/auth */ "./resources/js/auth.js");
 /* harmony import */ var _js_session__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../js/session */ "./resources/js/session.js");
 //
 //
@@ -1956,7 +1956,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      breadcrumbList: []
+      breadcrumbList: [],
+      session: {}
     };
   },
   watch: {
@@ -1965,14 +1966,22 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
+    var _this = this;
+
     this.breadcrumbList = this.$route.meta.breadcrumb;
+    _js_session__WEBPACK_IMPORTED_MODULE_1__.default.getSession().then(function (res) {
+      _this.session = {
+        name: res.data.name,
+        role: res.data.role
+      };
+    });
   },
   methods: {
     logout: function logout() {
-      var _this = this;
+      var _this2 = this;
 
-      _js_http__WEBPACK_IMPORTED_MODULE_0__.default.post('/auth/logout', {}).then(function (res) {})["catch"](function (err) {})["finally"](function () {
-        _this.$router.push({
+      _js_auth__WEBPACK_IMPORTED_MODULE_0__.default.logout().then(function (res) {})["catch"](function (err) {})["finally"](function () {
+        _this2.$router.push({
           name: 'login'
         });
 
@@ -2045,6 +2054,33 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_5__.default({
 
 /***/ }),
 
+/***/ "./resources/js/auth.js":
+/*!******************************!*\
+  !*** ./resources/js/auth.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http */ "./resources/js/http.js");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  login: function login(user, pass) {
+    return _http__WEBPACK_IMPORTED_MODULE_0__.default.post('/auth/login', {
+      name: user,
+      password: pass
+    });
+  },
+  logout: function logout() {
+    return _http__WEBPACK_IMPORTED_MODULE_0__.default.post('/auth/logout', {});
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/bootstrap.js":
 /*!***********************************!*\
   !*** ./resources/js/bootstrap.js ***!
@@ -2092,17 +2128,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _session__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./session */ "./resources/js/session.js");
 
 
-var token = _session__WEBPACK_IMPORTED_MODULE_1__.default.getToken();
 var config = {
   baseURL: "http://localhost:8000/api",
   withCredentials: true,
   headers: {
-    Authorization: "Bearer ".concat(token)
+    Authorization: "Bearer "
   }
 };
 var http = axios__WEBPACK_IMPORTED_MODULE_0___default().create(config);
 http.interceptors.request.use(function (config) {
   console.log('Request ', config);
+
+  if (config.url === '/auth/login') {
+    var token = _session__WEBPACK_IMPORTED_MODULE_1__.default.getToken();
+
+    if (token) {
+      config.headers['Authorization'] = 'Bearer ' + token;
+    }
+  }
+
   return config;
 }, function (error) {
   return Promise.reject(error);
@@ -2248,9 +2292,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var universal_cookie__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! universal-cookie */ "./node_modules/universal-cookie/es6/index.js");
+/* harmony import */ var _js_http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../js/http */ "./resources/js/http.js");
+/* harmony import */ var universal_cookie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! universal-cookie */ "./node_modules/universal-cookie/es6/index.js");
 
-var cookie = new universal_cookie__WEBPACK_IMPORTED_MODULE_0__.default();
+
+var cookie = new universal_cookie__WEBPACK_IMPORTED_MODULE_1__.default();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   setToken: function setToken(token) {
     cookie.set('token', token, {
@@ -2277,6 +2323,9 @@ var cookie = new universal_cookie__WEBPACK_IMPORTED_MODULE_0__.default();
     return cookie.get('auth', {
       path: '/'
     });
+  },
+  getSession: function getSession() {
+    return _js_http__WEBPACK_IMPORTED_MODULE_0__.default.post('/auth/me', {});
   }
 });
 
@@ -20997,7 +21046,13 @@ var render = function() {
                 "v-list-item-content",
                 [
                   _c("v-list-item-title", { staticClass: "text-h6" }, [
-                    _vm._v("\n          Expenses\n        ")
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(_vm.session.name) +
+                        " (" +
+                        _vm._s(_vm.session.role) +
+                        ")\n        "
+                    )
                   ]),
                   _vm._v(" "),
                   _c("v-list-item-subtitle")

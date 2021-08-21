@@ -83,7 +83,7 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       })["catch"](function (err) {
-        console.log(err);
+        alert('Invalid login');
       })["finally"](function () {});
     }
   },
@@ -93,29 +93,6 @@ __webpack_require__.r(__webpack_exports__);
         name: 'dashboard'
       });
     }
-  }
-});
-
-/***/ }),
-
-/***/ "./resources/js/auth.js":
-/*!******************************!*\
-  !*** ./resources/js/auth.js ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http */ "./resources/js/http.js");
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  login: function login(user, pass) {
-    return _http__WEBPACK_IMPORTED_MODULE_0__.default.post('/auth/login', {
-      name: user,
-      password: pass
-    });
   }
 });
 

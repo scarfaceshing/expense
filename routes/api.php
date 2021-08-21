@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\ExpenseCategoriesController;
+use App\Http\Controllers\ExpensesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,9 +32,18 @@ Route::group(
     }
 );
 
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'data'
-]), function() {
-    Route::get('user', [UserController::class, 'index']);
-}
+Route::group(
+    [
+        'middleware' => 'api',
+        'prefix' => 'data',
+    ],
+    function () {
+        Route::resource('user', UserController::class);
+        Route::resource('role', RolesController::class);
+        Route::resource(
+            'expense-categories',
+            ExpenseCategoriesController::class
+        );
+        Route::resource('expenses', ExpensesController::class);
+    }
+);

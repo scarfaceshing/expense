@@ -7,4 +7,7 @@ export default {
       password: pass,
     })
   },
+  logout() {
+    return http.post('/auth/logout', {})
+  },
 }

@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class ExpenseCategoriesController extends Controller
 {
+    //
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +20,11 @@ class ExpenseCategoriesController extends Controller
      */
     public function index()
     {
-        //
+        if (auth()->user()->role === 'Administrator') {
+            return response()->json(ExpenseCategories::all());
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 
     /**
@@ -36,6 +46,20 @@ class ExpenseCategoriesController extends Controller
     public function store(Request $request)
     {
         //
+        if (auth()->user()->role === 'Administrator') {
+            $expenseCat = new ExpenseCategories();
+            $expenseCat->name = $request->name;
+            $expenseCat->email = $request->email;
+            $expenseCat->password = bcrypt('1234');
+            $expenseCat->role = $request->role;
+            $expenseCat->save();
+
+            if ($expenseCat) {
+                return response()->json(['Status' => 'Success']);
+            }
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 
     /**
@@ -67,9 +91,26 @@ class ExpenseCategoriesController extends Controller
      * @param  \App\Models\ExpenseCategories  $expenseCategories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ExpenseCategories $expenseCategories)
-    {
+    public function update(
+        Request $request,
+        ExpenseCategories $expenseCategories
+    ) {
         //
+
+        if (auth()->user()->role === 'Administrator') {
+            $expenseCat = ExpenseCategories::findOrFail($expenseCategories->id);
+            $expenseCat->name = $request->name;
+            $expenseCat->email = $request->email;
+            $expenseCat->password = bcrypt('1234');
+            $expenseCat->role = $request->role;
+            $expenseCat->save();
+
+            if ($expenseCat) {
+                return response()->json(['Status' => 'Success']);
+            }
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 
     /**
@@ -81,5 +122,10 @@ class ExpenseCategoriesController extends Controller
     public function destroy(ExpenseCategories $expenseCategories)
     {
         //
+        if (ExpenseCategories::findOrFail($expenseCategories->id)->delete()) {
+            return response()->json(['Status' => 'Success']);
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 }
