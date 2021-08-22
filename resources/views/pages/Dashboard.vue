@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PieChart :chartdata="circledata" :options="options" />
+    <PieChart v-if="showChart" :chartdata="circledata" :options="options" />
   </div>
 </template>
 
@@ -14,8 +14,9 @@ export default {
   },
   data() {
     return {
+      showChart: false,
       circledata: {
-        labels: [],
+        labels: ['A', 'B'],
         datasets: [
           {
             backgroundColor: [
@@ -34,7 +35,7 @@ export default {
               '#ac65df',
               '#3c19aa',
             ],
-            data: [],
+            data: [1, 2],
           },
         ],
       },
@@ -49,12 +50,19 @@ export default {
       return await http.get('/data/expenses')
     },
   },
+  beforeDestroy() {
+    this.showChart = false
+  },
   created() {
     this.loadData().then((res) => {
-      res.data.map((item, index) => {
-        this.circledata.labels[index] = item.expenses_category
-        this.circledata.datasets[0].data[index] = item.amount
-      })
+      if (res.status === 200 && res.statusText === 'OK') {
+        res.data.map((item, index) => {
+          this.circledata.labels[index] = item.expenses_category
+          this.circledata.datasets[0].data[index] = item.amount
+        })
+
+        this.showChart = true
+      }
     })
   },
 }

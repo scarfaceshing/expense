@@ -47,11 +47,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      showChart: false,
       circledata: {
-        labels: [],
+        labels: ['A', 'B'],
         datasets: [{
           backgroundColor: ['#50826a', '#1e6937', '#435473', '#2aaeb2', '#814e35', '#92f037', '#173f8', '#6e1445', '#dd162e', '#5c1095', '#ee8cdf', '#16af51', '#ac65df', '#3c19aa'],
-          data: []
+          data: [1, 2]
         }]
       },
       options: {
@@ -82,14 +83,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     }
   },
+  beforeDestroy: function beforeDestroy() {
+    this.showChart = false;
+  },
   created: function created() {
     var _this = this;
 
     this.loadData().then(function (res) {
-      res.data.map(function (item, index) {
-        _this.circledata.labels[index] = item.expenses_category;
-        _this.circledata.datasets[0].data[index] = item.amount;
-      });
+      if (res.status === 200 && res.statusText === 'OK') {
+        res.data.map(function (item, index) {
+          _this.circledata.labels[index] = item.expenses_category;
+          _this.circledata.datasets[0].data[index] = item.amount;
+        });
+        _this.showChart = true;
+      }
     });
   }
 });
@@ -951,9 +958,11 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("PieChart", {
-        attrs: { chartdata: _vm.circledata, options: _vm.options }
-      })
+      _vm.showChart
+        ? _c("PieChart", {
+            attrs: { chartdata: _vm.circledata, options: _vm.options }
+          })
+        : _vm._e()
     ],
     1
   )

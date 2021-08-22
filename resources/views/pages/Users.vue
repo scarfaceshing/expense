@@ -169,9 +169,7 @@ export default {
       this.ShowViewDialog(true)
     },
     Add() {
-      this.valid = true
       this.type = 'ADD'
-
       this.model = {
         id: '',
         name: '',
@@ -179,7 +177,9 @@ export default {
         role: '',
       }
 
-      this.ShowDialog(true)
+      Promise.resolve(this.ShowDialog(true)).then((res) => {
+        this.$refs.form.reset()
+      })
     },
     OnDelete(item) {
       this.type = 'DELETE'
@@ -195,12 +195,9 @@ export default {
       this.model = item
     },
     Exit() {
-      this.valid = true
-      console.log('Close')
       this.ShowDialog(false)
     },
     Save() {
-      console.log('Save')
       if (!this.$refs.form.validate()) {
         return
       }
@@ -214,7 +211,6 @@ export default {
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
-              console.log(res)
             }
           })
           .catch((res) => {})
@@ -233,7 +229,6 @@ export default {
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
-              console.log(res)
             }
           })
           .catch((err) => {})
@@ -248,7 +243,6 @@ export default {
           .delete(`/data/user/${this.model.id}`, {})
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
-              console.log(res)
             }
           })
           .catch((err) => {})

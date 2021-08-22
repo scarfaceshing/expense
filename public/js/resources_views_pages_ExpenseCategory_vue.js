@@ -252,6 +252,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.$refs.dialog.visible = value;
     },
     Add: function Add() {
+      var _this2 = this;
+
       this.valid = true;
       this.type = 'ADD';
       this.model = {
@@ -259,7 +261,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: '',
         description: ''
       };
-      this.ShowDialog(true);
+      Promise.resolve(this.ShowDialog(true)).then(function (res) {
+        _this2.$refs.form.reset();
+      });
     },
     OnDelete: function OnDelete(item) {
       this.type = 'DELETE';
@@ -275,14 +279,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.model = item;
     },
     Exit: function Exit() {
-      this.valid = true;
-      console.log('Close');
       this.ShowDialog(false);
     },
     Save: function Save() {
-      var _this2 = this;
-
-      console.log('Save');
+      var _this3 = this;
 
       if (!this.$refs.form.validate()) {
         return;
@@ -293,13 +293,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           name: this.model.name,
           description: this.model.description
         }).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            console.log(res);
-          }
+          if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (res) {})["finally"](function () {
-          _this2.LoadData();
+          _this3.LoadData();
 
-          _this2.ShowDialog(false);
+          _this3.ShowDialog(false);
         });
       }
 
@@ -308,27 +306,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           name: this.model.name,
           description: this.model.description
         }).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            console.log(res);
-          }
+          if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (err) {})["finally"](function () {
-          _this2.LoadData();
+          _this3.LoadData();
 
-          _this2.ShowDialog(false);
+          _this3.ShowDialog(false);
         });
       }
 
       if (this.type === 'DELETE') {
         _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/expense-categories/".concat(this.model.id), {}).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {
-            _this2.LoadData();
-
-            console.log(res);
+            _this3.LoadData();
           }
         })["catch"](function (err) {})["finally"](function () {
-          _this2.LoadData();
+          _this3.LoadData();
 
-          _this2.ShowDeleteDialog(false);
+          _this3.ShowDeleteDialog(false);
         });
       }
     }

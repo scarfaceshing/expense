@@ -100,9 +100,7 @@ export default {
             return false
           })
           .finally(() => {})
-      } catch (err) {
-        console.log(err)
-      }
+      } catch (err) {}
     },
     submit() {
       if (!this.$refs.form.validate()) {

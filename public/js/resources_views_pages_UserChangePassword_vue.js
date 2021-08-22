@@ -152,9 +152,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 6:
                 _context.prev = 6;
                 _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
 
-              case 9:
+              case 8:
               case "end":
                 return _context.stop();
             }

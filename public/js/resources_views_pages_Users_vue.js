@@ -293,7 +293,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowViewDialog(true);
     },
     Add: function Add() {
-      this.valid = true;
+      var _this3 = this;
+
       this.type = 'ADD';
       this.model = {
         id: '',
@@ -301,7 +302,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         email: '',
         role: ''
       };
-      this.ShowDialog(true);
+      Promise.resolve(this.ShowDialog(true)).then(function (res) {
+        _this3.$refs.form.reset();
+      });
     },
     OnDelete: function OnDelete(item) {
       this.type = 'DELETE';
@@ -317,14 +320,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.model = item;
     },
     Exit: function Exit() {
-      this.valid = true;
-      console.log('Close');
       this.ShowDialog(false);
     },
     Save: function Save() {
-      var _this3 = this;
-
-      console.log('Save');
+      var _this4 = this;
 
       if (!this.$refs.form.validate()) {
         return;
@@ -336,13 +335,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           email: this.model.email,
           role: this.model.role
         }).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            console.log(res);
-          }
+          if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (res) {})["finally"](function () {
-          _this3.LoadData();
+          _this4.LoadData();
 
-          _this3.ShowDialog(false);
+          _this4.ShowDialog(false);
         });
       }
 
@@ -352,25 +349,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           email: this.model.email,
           role: this.model.role
         }).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            console.log(res);
-          }
+          if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (err) {})["finally"](function () {
-          _this3.LoadData();
+          _this4.LoadData();
 
-          _this3.ShowDialog(false);
+          _this4.ShowDialog(false);
         });
       }
 
       if (this.type === 'DELETE') {
         _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/user/".concat(this.model.id), {}).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            console.log(res);
-          }
+          if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (err) {})["finally"](function () {
-          _this3.LoadData();
+          _this4.LoadData();
 
-          _this3.ShowDeleteDialog(false);
+          _this4.ShowDeleteDialog(false);
         });
       }
     }

@@ -205,7 +205,9 @@ export default {
         date_entry: this.date,
       }
 
-      this.ShowDialog(true)
+      Promise.resolve(this.ShowDialog(true)).then((res) => {
+        this.$refs.form.reset()
+      })
     },
     OnDelete(item) {
       this.type = 'DELETE'
@@ -221,12 +223,9 @@ export default {
       this.model = item
     },
     Exit() {
-      this.valid = true
-      console.log('Close')
       this.ShowDialog(false)
     },
     Save() {
-      console.log('Save')
       if (!this.$refs.form.validate()) {
         return
       }
@@ -240,7 +239,6 @@ export default {
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
-              console.log(res)
             }
           })
           .catch((res) => {})
@@ -259,7 +257,6 @@ export default {
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
-              console.log(res)
             }
           })
           .catch((err) => {})
@@ -275,7 +272,6 @@ export default {
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
               this.LoadData()
-              console.log(res)
             }
           })
           .catch((err) => {})
