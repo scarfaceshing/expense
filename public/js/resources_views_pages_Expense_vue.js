@@ -220,6 +220,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -359,10 +361,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     Edit: function Edit(item) {
       this.type = 'UPDATE';
       this.ShowDialog(true);
-      this.model = item;
-      this.model.expenses_category = {
-        id: item.expense_cat_relation.id,
-        name: item.expense_cat_relation.name
+      this.model = {
+        id: item.id,
+        expenses_category: item.expense_cat_relation ? item.expense_cat_relation.id : '',
+        amount: item.amount,
+        date_entry: item.date_entry
       };
     },
     Exit: function Exit() {
@@ -381,9 +384,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           amount: this.model.amount,
           date_entry: this.model.date_entry
         }).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            _this5.LoadData();
-          }
+          if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (res) {})["finally"](function () {
           _this5.LoadData();
 
@@ -407,6 +408,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
+    /* http
+      .patch(`/data/expenses/1`, {
+        expenses_category: '1',
+        amount: Math.random(),
+        date_entry: '2021-08-21',
+      })
+      .then((res) => {
+        if (res.status === 200 && res.statusText === 'OK') {
+        }
+      })
+      .catch((err) => {})
+      .finally(() => {
+        this.LoadData()
+        this.ShowDialog(false)
+      }) */
     this.LoadData();
     this.loadExpense();
   }
@@ -1778,11 +1794,15 @@ var render = function() {
                       fn: function(ref) {
                         var item = ref.item
                         return [
-                          _vm._v(
-                            "\n          " +
-                              _vm._s(item.expense_cat_relation.name) +
-                              "\n        "
-                          )
+                          item.expense_cat_relation
+                            ? _c("span", [
+                                _vm._v(
+                                  "\n            " +
+                                    _vm._s(item.expense_cat_relation.name) +
+                                    "\n          "
+                                )
+                              ])
+                            : _vm._e()
                         ]
                       }
                     },

@@ -25,7 +25,7 @@ class ExpensesController extends Controller
             auth()->user()->role === 'Administrator' ||
             auth()->user()->role === 'User'
         ) {
-            $expenses = Expenses::with(relations: 'expenseCatRelation')->get();
+            $expenses = Expenses::with('expenseCatRelation')->get();
 
             return response()->json($expenses);
         } else {

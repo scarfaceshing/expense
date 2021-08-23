@@ -111,7 +111,9 @@
           @click:row="Show($event)"
         >
           <template #[`item.expenses_category`]="{ item }">
-            {{ item.expense_cat_relation.name }}
+            <span v-if="item.expense_cat_relation">
+              {{ item.expense_cat_relation.name }}
+            </span>
           </template>
           <template #[`item.amount`]="{ item }">$ {{ item.amount }}</template>
           <template #[`item.action`]="{ item }">
@@ -236,10 +238,14 @@ export default {
     Edit(item) {
       this.type = 'UPDATE'
       this.ShowDialog(true)
-      this.model = item
-      this.model.expenses_category = {
-        id: item.expense_cat_relation.id,
-        name: item.expense_cat_relation.name,
+
+      this.model = {
+        id: item.id,
+        expenses_category: item.expense_cat_relation
+          ? item.expense_cat_relation.id
+          : '',
+        amount: item.amount,
+        date_entry: item.date_entry,
       }
     },
     Exit() {
@@ -259,7 +265,6 @@ export default {
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
-              this.LoadData()
             }
           })
           .catch((res) => {})
@@ -289,6 +294,22 @@ export default {
     },
   },
   mounted() {
+    /* http
+      .patch(`/data/expenses/1`, {
+        expenses_category: '1',
+        amount: Math.random(),
+        date_entry: '2021-08-21',
+      })
+      .then((res) => {
+        if (res.status === 200 && res.statusText === 'OK') {
+        }
+      })
+      .catch((err) => {})
+      .finally(() => {
+        this.LoadData()
+        this.ShowDialog(false)
+      }) */
+
     this.LoadData()
     this.loadExpense()
   },

@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->id();
             $table->integer('cat_id');
             $table->double('amount');
-            $table->date('date_entry');
+            $table->date('date_entry')->nullable();
             $table->timestamps();
         });
     }
