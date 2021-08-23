@@ -69,4 +69,14 @@ php artisan db:seed
 npm run all
 ```
 
+# TO LOGIN USERS
 
+User
+
+username: user
+password: password
+
+Admin
+
+username: admin
+password: password
