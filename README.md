@@ -18,14 +18,24 @@ composer install
 npm install
 ```
 
-3. create database {YOUR_DATABASE} name
+3. create database YOUR_DATABASE name
+
+example: CREATE DATABASE my_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 4. edit .env file
 
 ```
-DB_DATABASE={YOUR_DATABASE}
-DB_USERNAME={YOUR_USER}
-DB_PASSWORD={YOUR_PASSWORD}
+DB_DATABASE=YOUR_DATABASE
+DB_USERNAME=YOUR_USER
+DB_PASSWORD=YOUR_PASSWORD
+```
+
+example: 
+
+```
+DB_DATABASE=my_db
+DB_USERNAME=root
+DB_PASSWORD=1234
 ```
 
 5. add this code in .env file
