@@ -12,9 +12,11 @@ create database {YOUR_DATABASE} name
 
 edit .env file
 
+```
 DB_DATABASE={YOUR_DATABASE}
 DB_USERNAME={YOUR_USER}
 DB_PASSWORD={YOUR_PASSWORD}
+```
 
 ```
 composer install
