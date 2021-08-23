@@ -6,6 +6,7 @@ const config = {
   withCredentials: true,
   headers: {
     Authorization: `Bearer `,
+    'X-Requested-With': XMLHttpRequest,
   },
 }
 

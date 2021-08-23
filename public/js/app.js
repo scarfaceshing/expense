@@ -2160,7 +2160,8 @@ var config = {
   baseURL: "http://localhost:8000/api",
   withCredentials: true,
   headers: {
-    Authorization: "Bearer "
+    Authorization: "Bearer ",
+    'X-Requested-With': XMLHttpRequest
   }
 };
 var http = axios__WEBPACK_IMPORTED_MODULE_0___default().create(config);
