@@ -8,6 +8,8 @@ nodejs
 mariadb or mysql
 
 # Setup
+git clone 
+
 create database {YOUR_DATABASE} name
 
 edit .env file
