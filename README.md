@@ -28,7 +28,7 @@ DB_USERNAME={YOUR_USER}
 DB_PASSWORD={YOUR_PASSWORD}
 ```
 
-5. add this in .env file
+5. add this code in .env file
 
 ```
 MIX_APP_URL="${APP_URL}"
