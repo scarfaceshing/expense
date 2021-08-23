@@ -271,7 +271,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowDeleteDialog(true);
     },
     Delete: function Delete() {
-      this.Save();
+      var _this3 = this;
+
+      _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/expense-categories/".concat(this.model.id), {}).then(function (res) {
+        if (res.status === 200 && res.statusText === 'OK') {
+          _this3.LoadData();
+        }
+      })["catch"](function (err) {})["finally"](function () {
+        _this3.LoadData();
+
+        _this3.ShowDeleteDialog(false);
+      });
     },
     Edit: function Edit(item) {
       this.type = 'UPDATE';
@@ -282,7 +292,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowDialog(false);
     },
     Save: function Save() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.$refs.form.validate()) {
         return;
@@ -295,9 +305,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (res) {})["finally"](function () {
-          _this3.LoadData();
+          _this4.LoadData();
 
-          _this3.ShowDialog(false);
+          _this4.ShowDialog(false);
         });
       }
 
@@ -308,21 +318,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (err) {})["finally"](function () {
-          _this3.LoadData();
+          _this4.LoadData();
 
-          _this3.ShowDialog(false);
-        });
-      }
-
-      if (this.type === 'DELETE') {
-        _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/expense-categories/".concat(this.model.id), {}).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            _this3.LoadData();
-          }
-        })["catch"](function (err) {})["finally"](function () {
-          _this3.LoadData();
-
-          _this3.ShowDeleteDialog(false);
+          _this4.ShowDialog(false);
         });
       }
     }

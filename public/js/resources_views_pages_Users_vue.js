@@ -312,7 +312,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowDeleteDialog(true);
     },
     Delete: function Delete() {
-      this.Save();
+      var _this4 = this;
+
+      _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/user/".concat(this.model.id), {}).then(function (res) {
+        if (res.status === 200 && res.statusText === 'OK') {}
+      })["catch"](function (err) {})["finally"](function () {
+        _this4.LoadData();
+
+        _this4.ShowDeleteDialog(false);
+      });
     },
     Edit: function Edit(item) {
       this.type = 'UPDATE';
@@ -323,7 +331,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowDialog(false);
     },
     Save: function Save() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (!this.$refs.form.validate()) {
         return;
@@ -337,9 +345,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (res) {})["finally"](function () {
-          _this4.LoadData();
+          _this5.LoadData();
 
-          _this4.ShowDialog(false);
+          _this5.ShowDialog(false);
         });
       }
 
@@ -351,19 +359,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (err) {})["finally"](function () {
-          _this4.LoadData();
+          _this5.LoadData();
 
-          _this4.ShowDialog(false);
-        });
-      }
-
-      if (this.type === 'DELETE') {
-        _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/user/".concat(this.model.id), {}).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {}
-        })["catch"](function (err) {})["finally"](function () {
-          _this4.LoadData();
-
-          _this4.ShowDeleteDialog(false);
+          _this5.ShowDialog(false);
         });
       }
     }

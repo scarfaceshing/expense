@@ -214,6 +214,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -340,18 +346,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowDeleteDialog(true);
     },
     Delete: function Delete() {
-      this.Save();
+      var _this4 = this;
+
+      _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/expenses/".concat(this.model.id), {}).then(function (res) {
+        if (res.status === 200 && res.statusText === 'OK') {}
+      })["catch"](function (err) {})["finally"](function () {
+        _this4.LoadData();
+
+        _this4.ShowDeleteDialog(false);
+      });
     },
     Edit: function Edit(item) {
       this.type = 'UPDATE';
       this.ShowDialog(true);
       this.model = item;
+      this.model.expenses_category = {
+        id: item.expense_cat_relation.id,
+        name: item.expense_cat_relation.name
+      };
     },
     Exit: function Exit() {
       this.ShowDialog(false);
     },
     Save: function Save() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (!this.$refs.form.validate()) {
         return;
@@ -363,11 +381,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           amount: this.model.amount,
           date_entry: this.model.date_entry
         }).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {}
+          if (res.status === 200 && res.statusText === 'OK') {
+            _this5.LoadData();
+          }
         })["catch"](function (res) {})["finally"](function () {
-          _this4.LoadData();
+          _this5.LoadData();
 
-          _this4.ShowDialog(false);
+          _this5.ShowDialog(false);
         });
       }
 
@@ -379,21 +399,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (err) {})["finally"](function () {
-          _this4.LoadData();
+          _this5.LoadData();
 
-          _this4.ShowDialog(false);
-        });
-      }
-
-      if (this.type === 'DELETE') {
-        _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/expenses/".concat(this.model.id), {}).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            _this4.LoadData();
-          }
-        })["catch"](function (err) {})["finally"](function () {
-          _this4.LoadData();
-
-          _this4.ShowDeleteDialog(false);
+          _this5.ShowDialog(false);
         });
       }
     }
@@ -1521,7 +1529,7 @@ var render = function() {
                       attrs: {
                         items: _vm.form.expense,
                         "item-text": "name",
-                        "item-value": "name",
+                        "item-value": "id",
                         rules: _vm.validator.required
                       },
                       model: {
@@ -1696,15 +1704,23 @@ var render = function() {
                 _c("v-simple-table", [
                   _c("tbody", [
                     _c("tr", [
-                      _c("td", [_c("strong", [_vm._v("Name")])]),
+                      _c("td", [_c("strong", [_vm._v("Expense Category")])]),
                       _vm._v(" "),
-                      _c("td", [_c("strong", [_vm._v("Email")])]),
+                      _c("td", [_c("strong", [_vm._v("Amount")])]),
                       _vm._v(" "),
-                      _c("td", [_c("strong", [_vm._v("Role")])])
+                      _c("td", [_c("strong", [_vm._v("Date Entry")])])
                     ]),
                     _vm._v(" "),
                     _c("tr", [
-                      _c("td", [_vm._v(_vm._s(_vm.model.expenses_category))]),
+                      _vm.model.expense_cat_relation
+                        ? _c("td", [
+                            _vm._v(
+                              "\n              " +
+                                _vm._s(_vm.model.expense_cat_relation.name) +
+                                "\n            "
+                            )
+                          ])
+                        : _vm._e(),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(_vm.model.amount))]),
                       _vm._v(" "),
@@ -1757,6 +1773,26 @@ var render = function() {
                 },
                 scopedSlots: _vm._u(
                   [
+                    {
+                      key: "item.expenses_category",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [
+                          _vm._v(
+                            "\n          " +
+                              _vm._s(item.expense_cat_relation.name) +
+                              "\n        "
+                          )
+                        ]
+                      }
+                    },
+                    {
+                      key: "item.amount",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v("$ " + _vm._s(item.amount))]
+                      }
+                    },
                     {
                       key: "item.action",
                       fn: function(ref) {

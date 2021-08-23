@@ -23,7 +23,7 @@
             v-model="model.expenses_category"
             :items="form.expense"
             item-text="name"
-            item-value="name"
+            item-value="id"
             :rules="validator.required"
           />
           <v-text-field
@@ -81,12 +81,14 @@
         <v-simple-table>
           <tbody>
             <tr>
-              <td><strong>Name</strong></td>
-              <td><strong>Email</strong></td>
-              <td><strong>Role</strong></td>
+              <td><strong>Expense Category</strong></td>
+              <td><strong>Amount</strong></td>
+              <td><strong>Date Entry</strong></td>
             </tr>
             <tr>
-              <td>{{ model.expenses_category }}</td>
+              <td v-if="model.expense_cat_relation">
+                {{ model.expense_cat_relation.name }}
+              </td>
               <td>{{ model.amount }}</td>
               <td>{{ model.date_entry }}</td>
             </tr>
@@ -108,6 +110,10 @@
           class="elevation-1"
           @click:row="Show($event)"
         >
+          <template #[`item.expenses_category`]="{ item }">
+            {{ item.expense_cat_relation.name }}
+          </template>
+          <template #[`item.amount`]="{ item }">$ {{ item.amount }}</template>
           <template #[`item.action`]="{ item }">
             <v-icon
               color="primary"
@@ -215,12 +221,26 @@ export default {
       this.ShowDeleteDialog(true)
     },
     Delete() {
-      this.Save()
+      http
+        .delete(`/data/expenses/${this.model.id}`, {})
+        .then((res) => {
+          if (res.status === 200 && res.statusText === 'OK') {
+          }
+        })
+        .catch((err) => {})
+        .finally(() => {
+          this.LoadData()
+          this.ShowDeleteDialog(false)
+        })
     },
     Edit(item) {
       this.type = 'UPDATE'
       this.ShowDialog(true)
       this.model = item
+      this.model.expenses_category = {
+        id: item.expense_cat_relation.id,
+        name: item.expense_cat_relation.name,
+      }
     },
     Exit() {
       this.ShowDialog(false)
@@ -239,6 +259,7 @@ export default {
           })
           .then((res) => {
             if (res.status === 200 && res.statusText === 'OK') {
+              this.LoadData()
             }
           })
           .catch((res) => {})
@@ -263,21 +284,6 @@ export default {
           .finally(() => {
             this.LoadData()
             this.ShowDialog(false)
-          })
-      }
-
-      if (this.type === 'DELETE') {
-        http
-          .delete(`/data/expenses/${this.model.id}`, {})
-          .then((res) => {
-            if (res.status === 200 && res.statusText === 'OK') {
-              this.LoadData()
-            }
-          })
-          .catch((err) => {})
-          .finally(() => {
-            this.LoadData()
-            this.ShowDeleteDialog(false)
           })
       }
     },

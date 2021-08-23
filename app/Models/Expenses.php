@@ -9,5 +9,10 @@ class Expenses extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['expenses_category', 'amount', 'date_entry'];
+    protected $fillable = ['cat_id', 'amount', 'date_entry'];
+
+    public function expenseCatRelation()
+    {
+        return $this->belongsTo('App\Models\ExpenseCategories', 'cat_id', 'id');
+    }
 }

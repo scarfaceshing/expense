@@ -239,21 +239,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     Add: function Add() {
       var _this2 = this;
 
-      this.valid = true;
-      this.type = 'ADD';
-      this.model = {
-        id: '',
-        name: 'User',
-        description: ''
-      };
       Promise.resolve(this.ShowDialog(true)).then(function (res) {
         _this2.$refs.form.reset();
+
+        _this2.valid = true;
+        _this2.type = 'ADD';
+        _this2.model = {
+          id: '',
+          name: 'User',
+          description: ''
+        };
       });
     },
     OnDelete: function OnDelete(item) {
-      this.type = 'DELETE';
-      this.model = item;
-      this.ShowDeleteDialog(true);
+      var _this3 = this;
+
+      Promise.resolve(this.ShowDeleteDialog(true)).then(function (res) {
+        _this3.type = 'DELETE';
+        _this3.model = item;
+      });
     },
     Delete: function Delete() {
       this.Save();
@@ -267,7 +271,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.ShowDialog(false);
     },
     Save: function Save() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.$refs.form.validate()) {
         return;
@@ -280,9 +284,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (res) {})["finally"](function () {
-          _this3.LoadData();
+          _this4.LoadData();
 
-          _this3.ShowDialog(false);
+          _this4.ShowDialog(false);
         });
       }
 
@@ -293,21 +297,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (res) {
           if (res.status === 200 && res.statusText === 'OK') {}
         })["catch"](function (err) {})["finally"](function () {
-          _this3.LoadData();
+          _this4.LoadData();
 
-          _this3.ShowDialog(false);
-        });
-      }
-
-      if (this.type === 'DELETE') {
-        _js_http__WEBPACK_IMPORTED_MODULE_1__.default.delete("/data/role/".concat(this.model.id), {}).then(function (res) {
-          if (res.status === 200 && res.statusText === 'OK') {
-            _this3.LoadData();
-          }
-        })["catch"](function (err) {})["finally"](function () {
-          _this3.LoadData();
-
-          _this3.ShowDeleteDialog(false);
+          _this4.ShowDialog(false);
         });
       }
     }

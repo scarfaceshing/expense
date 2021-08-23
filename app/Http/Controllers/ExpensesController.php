@@ -25,7 +25,9 @@ class ExpensesController extends Controller
             auth()->user()->role === 'Administrator' ||
             auth()->user()->role === 'User'
         ) {
-            return response()->json(Expenses::all());
+            $expenses = Expenses::with(relations: 'expenseCatRelation')->get();
+
+            return response()->json($expenses);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -56,7 +58,7 @@ class ExpensesController extends Controller
             auth()->user()->role === 'User'
         ) {
             $expenseCat = new Expenses();
-            $expenseCat->expenses_category = $request->expenses_category;
+            $expenseCat->cat_id = $request->expenses_category;
             $expenseCat->amount = $request->amount;
             $expenseCat->date_entry = $request->date_entry;
             $expenseCat->save();
@@ -107,7 +109,7 @@ class ExpensesController extends Controller
             auth()->user()->role === 'User'
         ) {
             $expenseCat = Expenses::findOrFail($id);
-            $expenseCat->expenses_category = $request->expenses_category;
+            $expenseCat->cat_id = $request->expenses_category;
             $expenseCat->amount = $request->amount;
             $expenseCat->date_entry = $request->date_entry;
             $expenseCat->save();

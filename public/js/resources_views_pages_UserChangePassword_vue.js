@@ -70,6 +70,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 
 
@@ -79,6 +82,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     return {
       name: '',
+      invalid: false,
       valid: true,
       validator: _js_validator__WEBPACK_IMPORTED_MODULE_3__.default,
       id: '',
@@ -190,7 +194,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 break;
 
               case 6:
-                alert('Invalid old password');
+                _this5.invalid = true;
 
               case 7:
               case "end":
@@ -1097,6 +1101,21 @@ var render = function() {
             "v-col",
             { attrs: { sm: "6" } },
             [
+              _vm.invalid
+                ? _c(
+                    "v-alert",
+                    {
+                      attrs: {
+                        color: "red",
+                        dense: "",
+                        dismissible: "",
+                        type: "error"
+                      }
+                    },
+                    [_vm._v("\n        Invalid change password\n      ")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
               _c(
                 "v-form",
                 {

@@ -61,11 +61,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      invalid: false,
       username: '',
       password: ''
     };
@@ -83,7 +97,9 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       })["catch"](function (err) {
-        alert('Invalid login');
+        _this.invalid = true;
+        _this.username = '';
+        _this.password = '';
       })["finally"](function () {});
     }
   },
@@ -214,6 +230,37 @@ var render = function() {
                           }
                         },
                         [
+                          _c(
+                            "v-row",
+                            [
+                              _c(
+                                "v-col",
+                                [
+                                  _vm.invalid
+                                    ? _c(
+                                        "v-alert",
+                                        {
+                                          attrs: {
+                                            color: "red",
+                                            dense: "",
+                                            dismissible: "",
+                                            type: "error"
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                  Invalid Login\n                "
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e()
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
                           _c(
                             "v-row",
                             [

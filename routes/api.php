@@ -8,6 +8,7 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,5 +55,7 @@ Route::group(
             ChangePasswordController::class,
             'validatepass',
         ]);
+
+        Route::get('dashboard', [DashboardController::class, 'index']);
     }
 );

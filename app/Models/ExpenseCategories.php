@@ -10,4 +10,9 @@ class ExpenseCategories extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'description'];
+
+    public function expenseRelation()
+    {
+        return $this->hasMany('App\Models\Expenses', 'cat_id', 'id');
+    }
 }

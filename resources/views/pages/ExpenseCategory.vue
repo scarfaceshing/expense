@@ -168,7 +168,18 @@ export default {
       this.ShowDeleteDialog(true)
     },
     Delete() {
-      this.Save()
+      http
+        .delete(`/data/expense-categories/${this.model.id}`, {})
+        .then((res) => {
+          if (res.status === 200 && res.statusText === 'OK') {
+            this.LoadData()
+          }
+        })
+        .catch((err) => {})
+        .finally(() => {
+          this.LoadData()
+          this.ShowDeleteDialog(false)
+        })
     },
     Edit(item) {
       this.type = 'UPDATE'
@@ -214,21 +225,6 @@ export default {
           .finally(() => {
             this.LoadData()
             this.ShowDialog(false)
-          })
-      }
-
-      if (this.type === 'DELETE') {
-        http
-          .delete(`/data/expense-categories/${this.model.id}`, {})
-          .then((res) => {
-            if (res.status === 200 && res.statusText === 'OK') {
-              this.LoadData()
-            }
-          })
-          .catch((err) => {})
-          .finally(() => {
-            this.LoadData()
-            this.ShowDeleteDialog(false)
           })
       }
     },

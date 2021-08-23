@@ -1,6 +1,34 @@
 <template>
   <div>
-    <PieChart v-if="showChart" :chartdata="circledata" :options="options" />
+    <v-row>
+      <v-col cols="4">
+        <v-row>
+          <v-col>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th>Expense Category</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in displayData" :key="index">
+                    <td>
+                      <strong>{{ item.expense_cat_relation.name }}</strong>
+                    </td>
+                    <td>$ {{ item.total }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col>
+        <PieChart v-if="showChart" :chartdata="circledata" :options="options" />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -43,11 +71,12 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
       },
+      displayData: [],
     }
   },
   methods: {
     async loadData() {
-      return await http.get('/data/expenses')
+      return await http.get('/data/dashboard')
     },
   },
   beforeDestroy() {
@@ -56,9 +85,11 @@ export default {
   created() {
     this.loadData().then((res) => {
       if (res.status === 200 && res.statusText === 'OK') {
-        res.data.map((item, index) => {
-          this.circledata.labels[index] = item.expenses_category
-          this.circledata.datasets[0].data[index] = item.amount
+        this.displayData = res.data
+
+        this.displayData.map((item, index) => {
+          this.circledata.labels[index] = item.expense_cat_relation.name
+          this.circledata.datasets[0].data[index] = item.total
         })
 
         this.showChart = true

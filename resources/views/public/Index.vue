@@ -7,6 +7,19 @@
             <v-form @submit.prevent="login">
               <v-row>
                 <v-col>
+                  <v-alert
+                    v-if="invalid"
+                    color="red"
+                    dense
+                    dismissible
+                    type="error"
+                  >
+                    Invalid Login
+                  </v-alert>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
                   <v-row>
                     <v-col>
                       <div class="text-h4">Login</div>
@@ -53,6 +66,7 @@ import session from '../../js/session'
 export default {
   data() {
     return {
+      invalid: false,
       username: '',
       password: '',
     }
@@ -68,7 +82,10 @@ export default {
           }
         })
         .catch((err) => {
-          alert('Invalid login')
+          this.invalid = true
+
+          this.username = ''
+          this.password = ''
         })
         .finally(() => {})
     },

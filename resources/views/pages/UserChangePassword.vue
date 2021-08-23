@@ -2,6 +2,9 @@
   <div>
     <v-row justify="center">
       <v-col sm="6">
+        <v-alert v-if="invalid" color="red" dense dismissible type="error">
+          Invalid change password
+        </v-alert>
         <v-form
           ref="form"
           v-model="valid"
@@ -44,6 +47,7 @@ export default {
   data() {
     return {
       name: '',
+      invalid: false,
       valid: true,
       validator: Validator,
       id: '',
@@ -111,7 +115,7 @@ export default {
         if (await this.ValidateUser()) {
           this.ChangePass()
         } else {
-          alert('Invalid old password')
+          this.invalid = true
         }
       })()
     },

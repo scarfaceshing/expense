@@ -37,6 +37,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
  // import Chart from '../component/Chart.vue'
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -58,7 +86,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       options: {
         responsive: true,
         maintainAspectRatio: false
-      }
+      },
+      displayData: []
     };
   },
   methods: {
@@ -69,7 +98,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _js_http__WEBPACK_IMPORTED_MODULE_1__.default.get('/data/expenses');
+                return _js_http__WEBPACK_IMPORTED_MODULE_1__.default.get('/data/dashboard');
 
               case 2:
                 return _context.abrupt("return", _context.sent);
@@ -91,10 +120,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     this.loadData().then(function (res) {
       if (res.status === 200 && res.statusText === 'OK') {
-        res.data.map(function (item, index) {
-          _this.circledata.labels[index] = item.expenses_category;
-          _this.circledata.datasets[0].data[index] = item.amount;
+        _this.displayData = res.data;
+
+        _this.displayData.map(function (item, index) {
+          _this.circledata.labels[index] = item.expense_cat_relation.name;
+          _this.circledata.datasets[0].data[index] = item.total;
         });
+
         _this.showChart = true;
       }
     });
@@ -958,11 +990,87 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.showChart
-        ? _c("PieChart", {
-            attrs: { chartdata: _vm.circledata, options: _vm.options }
-          })
-        : _vm._e()
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            { attrs: { cols: "4" } },
+            [
+              _c(
+                "v-row",
+                [
+                  _c(
+                    "v-col",
+                    [
+                      _c("v-simple-table", {
+                        scopedSlots: _vm._u([
+                          {
+                            key: "default",
+                            fn: function() {
+                              return [
+                                _c("thead", [
+                                  _c("tr", [
+                                    _c("th", [_vm._v("Expense Category")]),
+                                    _vm._v(" "),
+                                    _c("th", [_vm._v("Total")])
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "tbody",
+                                  _vm._l(_vm.displayData, function(
+                                    item,
+                                    index
+                                  ) {
+                                    return _c("tr", { key: index }, [
+                                      _c("td", [
+                                        _c("strong", [
+                                          _vm._v(
+                                            _vm._s(
+                                              item.expense_cat_relation.name
+                                            )
+                                          )
+                                        ])
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v("$ " + _vm._s(item.total))
+                                      ])
+                                    ])
+                                  }),
+                                  0
+                                )
+                              ]
+                            },
+                            proxy: true
+                          }
+                        ])
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            [
+              _vm.showChart
+                ? _c("PieChart", {
+                    attrs: { chartdata: _vm.circledata, options: _vm.options }
+                  })
+                : _vm._e()
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )

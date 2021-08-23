@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Expenses;
+use App\Models\ExpenseCategories;
 
 /*
 |--------------------------------------------------------------------------
