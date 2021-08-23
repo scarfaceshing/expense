@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Expenses;
-use App\Models\ExpenseCategories;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +16,3 @@ use App\Models\ExpenseCategories;
 Route::get('/{any}', function () {
     return view('index');
 })->where('any', '.*');
-
-/* Route::get('/', function () {
-    return view('test');
-}); */

@@ -74,13 +74,6 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        /*  return response()->json([
-            'access_token' => $token,
-            'expires_in' =>
-                auth()
-                    ->factory()
-                    ->getTTL() * 60,
-        ]); */
         return response()->json([
             'access_token' => $token,
             'expires_in' =>
