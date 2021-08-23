@@ -402,9 +402,8 @@ var render = function() {
                                           "\n                    Please hack my site by shingha on working palang... hehehe\n                    "
                                         ),
                                         _c("div", [_vm._v("Top 1")]),
-                                        _vm._v(
-                                          "\n                    hacker Koko\n                  "
-                                        )
+                                        _vm._v(" "),
+                                        _c("div", [_vm._v("hacker Koko")])
                                       ]
                                     )
                                   ],
