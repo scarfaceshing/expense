@@ -50,7 +50,7 @@ DB_PASSWORD=1234
 
 ```
 MIX_APP_URL="${APP_URL}"
-MIX_API_URL="${APP_URL}/api"
+MIX_API_URL="${APP_URL}:8000/api"
 ```
 
 8. execute this command 
