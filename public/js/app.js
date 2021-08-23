@@ -2000,6 +2000,8 @@ __webpack_require__.r(__webpack_exports__);
         name: res.data.name,
         role: res.data.role
       };
+    })["catch"](function (err) {
+      _js_session__WEBPACK_IMPORTED_MODULE_1__.default.removeToken();
     });
   },
   methods: {
@@ -2163,7 +2165,6 @@ var config = {
 };
 var http = axios__WEBPACK_IMPORTED_MODULE_0___default().create(config);
 http.interceptors.request.use(function (config) {
-  // console.log('Request ', config)
   if (config.url === '/auth/login') {
     var token = _session__WEBPACK_IMPORTED_MODULE_1__.default.getToken();
 
@@ -2177,7 +2178,6 @@ http.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 http.interceptors.response.use(function (response) {
-  // console.log('Response ', response)
   return response;
 }, function (error) {
   return Promise.reject(error);
@@ -2197,14 +2197,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _views_pages_Index_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../views/pages/Index.vue */ "./resources/views/pages/Index.vue");
+/* harmony import */ var _js_session__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../js/session */ "./resources/js/session.js");
 /* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_1__.default.use(vue_router__WEBPACK_IMPORTED_MODULE_2__.default);
+
+vue__WEBPACK_IMPORTED_MODULE_2__.default.use(vue_router__WEBPACK_IMPORTED_MODULE_3__.default);
 var routes = [{
   path: '/',
   redirect: '/login'
@@ -2233,7 +2235,8 @@ var routes = [{
       breadcrumb: [{
         text: 'Dashboard',
         name: 'dashboard'
-      }]
+      }],
+      requiredAuth: true
     }
   }, {
     path: 'roles',
@@ -2248,7 +2251,8 @@ var routes = [{
       }, {
         text: 'Roles',
         name: 'roles'
-      }]
+      }],
+      requiredAuth: true
     }
   }, {
     path: 'userchangepassword',
@@ -2263,7 +2267,8 @@ var routes = [{
       }, {
         text: 'User change password',
         name: 'userchangepassword'
-      }]
+      }],
+      requiredAuth: true
     }
   }, {
     path: 'user',
@@ -2278,7 +2283,8 @@ var routes = [{
       }, {
         text: 'Users',
         name: 'user'
-      }]
+      }],
+      requiredAuth: true
     }
   }, {
     path: 'expensecategory',
@@ -2293,7 +2299,8 @@ var routes = [{
       }, {
         text: 'Expense Category',
         name: 'expense'
-      }]
+      }],
+      requiredAuth: true
     }
   }, {
     path: 'expense',
@@ -2308,14 +2315,28 @@ var routes = [{
       }, {
         text: 'Expense',
         name: 'expense'
-      }]
+      }],
+      requiredAuth: true
     }
   }]
 }];
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__.default({
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_3__.default({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: routes
+});
+router.beforeEach(function (to, from, next) {
+  if (to.matched.some(function (record) {
+    return record.meta.requiredAuth;
+  })) {
+    _js_session__WEBPACK_IMPORTED_MODULE_1__.default.getSession().then(function (res) {})["catch"](function (err) {
+      router.push({
+        path: '/login'
+      });
+    });
+  }
+
+  next();
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (router);
 

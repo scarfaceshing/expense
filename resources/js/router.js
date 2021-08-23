@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainPage from '../views/pages/Index.vue'
+import session from '../js/session'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,7 @@ const routes = [
         meta: {
           text: 'Dashboard',
           breadcrumb: [{ text: 'Dashboard', name: 'dashboard' }],
+          requiredAuth: true,
         },
       },
       {
@@ -41,6 +43,7 @@ const routes = [
             { text: 'User management' },
             { text: 'Roles', name: 'roles' },
           ],
+          requiredAuth: true,
         },
       },
       {
@@ -53,6 +56,7 @@ const routes = [
             { text: 'User management' },
             { text: 'User change password', name: 'userchangepassword' },
           ],
+          requiredAuth: true,
         },
       },
       {
@@ -65,6 +69,7 @@ const routes = [
             { text: 'User management' },
             { text: 'Users', name: 'user' },
           ],
+          requiredAuth: true,
         },
       },
       {
@@ -77,6 +82,7 @@ const routes = [
             { text: 'Expense management' },
             { text: 'Expense Category', name: 'expense' },
           ],
+          requiredAuth: true,
         },
       },
       {
@@ -89,6 +95,7 @@ const routes = [
             { text: 'Expense management' },
             { text: 'Expense', name: 'expense' },
           ],
+          requiredAuth: true,
         },
       },
     ],
@@ -99,6 +106,19 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiredAuth)) {
+    session
+      .getSession()
+      .then((res) => {})
+      .catch((err) => {
+        router.push({ path: '/login' })
+      })
+  }
+
+  next()
 })
 
 export default router

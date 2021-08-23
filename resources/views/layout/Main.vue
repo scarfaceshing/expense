@@ -128,12 +128,17 @@ export default {
   mounted() {
     this.breadcrumbList = this.$route.meta.breadcrumb
 
-    session.getSession().then((res) => {
-      this.session = {
-        name: res.data.name,
-        role: res.data.role,
-      }
-    })
+    session
+      .getSession()
+      .then((res) => {
+        this.session = {
+          name: res.data.name,
+          role: res.data.role,
+        }
+      })
+      .catch((err) => {
+        session.removeToken()
+      })
   },
   methods: {
     logout() {
